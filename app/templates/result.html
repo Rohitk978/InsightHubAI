@@ -1,0 +1,91 @@
+<<<<<<< HEAD
+
+{% extends 'header.html' %}
+
+{% block title %}Translation Result{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <div class="eyebrow">TRANSLATION RESULT</div>
+
+    <h1>
+        Your translation
+        <span class="gradient-text">is ready.</span>
+    </h1>
+
+    <p>
+        Target language: {{ target_language }}
+    </p>
+</section>
+
+<section class="panel translation-panel">
+    <h2 class="section-title">Translated text</h2>
+
+    <div id="translated-output" class="translation-output">{{ result }}</div>
+
+    <div class="form-actions">
+        <button
+            type="button"
+            id="copy-translation"
+            class="btn btn-blue"
+        >
+            Copy Translation
+        </button>
+
+        <a
+            href="{{ url_for('text_generation.generate') }}"
+            class="btn btn-blue"
+        >
+            Translate Another Text
+        </a>
+    </div>
+
+    <p id="copy-status" class="form-help" role="status"></p>
+</section>
+
+<section class="panel translation-panel">
+    <h2 class="section-title">Original English text</h2>
+
+    <div class="translation-output">{{ original_text }}</div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const button = document.getElementById("copy-translation");
+    const output = document.getElementById("translated-output");
+    const status = document.getElementById("copy-status");
+
+    if (!button || !output || !status) {
+        return;
+    }
+
+    button.addEventListener("click", async () => {
+        try {
+            await navigator.clipboard.writeText(output.textContent);
+            status.textContent = "Translation copied successfully.";
+        } catch (error) {
+            status.textContent =
+                "Copy failed. Please select and copy the translation manually.";
+        }
+    });
+});
+</script>
+=======
+{% extends 'header.html' %} {% block title %}Result{% endblock %} {% block
+content %}
+<h1 class="text-center mb-4">Result</h1>
+<div class="card mb-4">
+  <div class="card-header bg-secondary text-white">
+    <h2 class="h5 mb-0">Output</h2>
+  </div>
+  <div class="card-body">
+    <p>{{ result | safe }}</p>
+    <a href="{{ url_for('summarization.summarize') }}" class="btn btn-primary"
+      >Back to Summarize</a
+    >
+  </div>
+</div>
+>>>>>>> origin/main
+{% endblock %}

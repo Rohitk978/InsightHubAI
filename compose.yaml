@@ -1,0 +1,16 @@
+
+services:
+  inshub-ai:
+    build: .
+    container_name: inshub-ai
+    ports:
+      - "8000:8000"
+    environment:
+      HF_HOME: /home/app/.cache/huggingface
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - huggingface-cache:/home/app/.cache/huggingface
+    restart: unless-stopped
+
+volumes:
+  huggingface-cache:

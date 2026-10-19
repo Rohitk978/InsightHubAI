@@ -1,0 +1,42 @@
+<<<<<<< HEAD
+{% extends 'header.html' %}
+
+{% block title %}Error{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <div class="eyebrow">SOMETHING WENT WRONG</div>
+
+    <h1>
+        Let's get you
+        <span class="gradient-text">back on track.</span>
+    </h1>
+</section>
+
+<section class="panel error-panel">
+    <div class="error-symbol">!</div>
+
+    <h2>We couldn't complete that request.</h2>
+
+    <p>{{ error }}</p>
+
+    <a href="/chat" class="btn btn-blue">
+        Back to Document Chat
+    </a>
+</section>
+{% endblock %}
+=======
+{% extends 'header.html' %} {% block title %}Error{% endblock %} {% block
+content %}
+<h1 class="text-center mb-4">Error</h1>
+<div class="card mb-4">
+  <div class="card-header bg-danger text-white">
+    <h2 class="h5 mb-0">An Error Occurred</h2>
+  </div>
+  <div class="card-body">
+    <p class="text-danger">{{ error }}</p>
+    <a href="/chat" class="btn btn-primary">Back to Chat</a>
+  </div>
+</div>
+{% endblock %}
+>>>>>>> origin/main

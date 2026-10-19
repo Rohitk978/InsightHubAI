@@ -1,0 +1,150 @@
+<<<<<<< HEAD
+{% extends 'header.html' %}
+
+{% block title %}Summarize{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <div class="eyebrow">QUICK UNDERSTANDING</div>
+
+    <h1>
+        Summarize the
+        <span class="gradient-text">important parts.</span>
+    </h1>
+
+    <p>
+        Select the input type supported by your summarization backend.
+    </p>
+</section>
+
+<section class="panel narrow-panel">
+    <form
+        action="/summarize"
+        method="post"
+        enctype="multipart/form-data"
+        id="summarize-form"
+        class="form-stack"
+    >
+        <label for="input_type">Input type</label>
+
+        <select
+            class="light-control"
+            name="input_type"
+            id="input_type"
+        >
+            <option value="text" selected>Text</option>
+            <option value="url">URL</option>
+            <option value="pdf">PDF</option>
+        </select>
+
+        <div id="Text-input" class="source-input-group">
+            <label for="text">Text</label>
+
+            <textarea
+                class="light-control"
+                name="text"
+                id="text"
+                rows="7"
+                placeholder="Paste text to summarize..."
+            ></textarea>
+        </div>
+
+        <div id="Url-input" class="source-input-group" hidden>
+            <label for="url">URL</label>
+
+            <input
+                class="light-control"
+                type="url"
+                name="url"
+                id="url"
+                placeholder="https://example.com/article"
+            >
+        </div>
+
+        <div id="file-input" class="source-input-group" hidden>
+            <label for="pdf">PDF file</label>
+
+            <input
+                class="light-control file-control"
+                type="file"
+                name="pdf"
+                id="pdf"
+                accept=".pdf,application/pdf"
+            >
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-blue">
+                Summarize ↗
+            </button>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script
+    src="{{ url_for('static', filename='summarize.js') }}?v=3"
+    defer
+></script>
+{% endblock %}
+=======
+{% extends 'header.html' %} {% block title %}Summarize{% endblock %} {% block
+content %}
+<h1 class="text-center mb-4">Summarize</h1>
+<div class="card mb-4">
+  <div class="card-header bg-primary text-white">
+    <h2 class="h5 mb-0">Summarize Content</h2>
+  </div>
+  <div class="card-body">
+    <form action="/summarize" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="input_type" class="form-label">Input Type</label>
+        <select class="form-select" name="input_type" id="input_type">
+          <option value="text" selected>Text</option>
+          <option value="url">URL</option>
+          <option value="pdf">PDF</option>
+        </select>
+      </div>
+
+      <div class="mb-3" id="Text-input">
+        <label for="text" class="form-label">Text</label>
+        <textarea
+          class="form-control"
+          name="text"
+          id="text"
+          rows="5"
+          placeholder="Enter text to summarize"
+        ></textarea>
+      </div>
+
+      <div class="mb-3" id="Url-input" style="display: none">
+        <label for="url" class="form-label">URL</label>
+        <input
+          type="url"
+          class="form-control"
+          name="url"
+          id="url"
+          placeholder="Enter URL to summarize"
+        />
+      </div>
+
+      <div class="mb-3" id="file-input" style="display: none">
+        <label for="pdf" class="form-label">PDF File</label>
+        <input
+          type="file"
+          class="form-control"
+          name="pdf"
+          id="pdf"
+          accept=".pdf"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Summarize</button>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="/static/summarize.js"></script>
+{% endblock %}
+>>>>>>> origin/main

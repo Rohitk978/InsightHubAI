@@ -1,0 +1,155 @@
+<<<<<<< HEAD
+
+{% extends 'header.html' %}
+
+{% block title %}English Translator{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <div class="eyebrow">LANGUAGE WORKSPACE</div>
+
+    <h1>
+        Translate
+        <span class="gradient-text">your words.</span>
+    </h1>
+
+    <p>
+        Enter 10–15 lines of English text and translate it into
+        your chosen language.
+    </p>
+</section>
+
+<section class="panel narrow-panel">
+    <form
+        action="{{ url_for('text_generation.generate') }}"
+        method="post"
+        id="generate-form"
+        class="form-stack"
+    >
+        <label for="prompt">English text</label>
+
+        <textarea
+            class="light-control"
+            name="prompt"
+            id="prompt"
+            rows="8"
+            maxlength="5000"
+            placeholder="Enter your English text here..."
+            required
+        >{{ prompt|default('') }}</textarea>
+
+        <div class="form-help">
+            Maximum 5,000 characters. Input must be in English.
+        </div>
+
+        <label for="target_language">Translate into</label>
+
+        <select
+            class="light-control"
+            name="target_language"
+            id="target_language"
+            required
+        >
+            <option value="">Choose a language</option>
+
+            {% for language in languages %}
+            <option
+                value="{{ language }}"
+                {% if selected_language|default('') == language %}
+                    selected
+                {% endif %}
+            >
+                {{ language }}
+            </option>
+            {% endfor %}
+        </select>
+
+        {% if error %}
+        <div class="translation-error" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <button
+                type="submit"
+                id="translate-button"
+                class="btn btn-blue"
+            >
+                Translate Text ↗
+            </button>
+        </div>
+
+        <p
+            id="translation-status"
+            class="form-help"
+            role="status"
+            aria-live="polite"
+        ></p>
+    </form>
+</section>
+
+{% if translated_text %}
+<section class="panel translation-panel" id="translation-result">
+    <div class="output-heading">
+        <div>
+            <div class="eyebrow">TRANSLATION OUTPUT</div>
+            <h2 class="section-title">
+                {{ selected_language }} Translation
+            </h2>
+        </div>
+
+        <button
+            type="button"
+            id="copy-translation"
+            class="btn btn-blue"
+        >
+            Copy Output
+        </button>
+    </div>
+
+    <div id="translated-output" class="translation-output">{{ translated_text }}</div>
+
+    <p
+        id="copy-status"
+        class="form-help"
+        role="status"
+        aria-live="polite"
+    ></p>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script
+    src="{{ url_for('static', filename='generate.js') }}?v=5"
+    defer
+></script>
+=======
+{% extends 'header.html' %} {% block title %}Generate Text{% endblock %} {%
+block content %}
+<h1 class="text-center mb-4">Generate Text</h1>
+<div class="card mb-4">
+  <div class="card-header bg-success text-white">
+    <h2 class="h5 mb-0">Generate Text</h2>
+  </div>
+  <div class="card-body">
+    <form action="/generate" method="POST">
+      <div class="mb-3">
+        <label for="prompt" class="form-label">Prompt</label>
+        <textarea
+          class="form-control"
+          name="prompt"
+          id="prompt"
+          rows="3"
+          placeholder="Enter prompt for text generation"
+        ></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Generate</button>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="/static/generate.js"></script>
+>>>>>>> origin/main
+{% endblock %}

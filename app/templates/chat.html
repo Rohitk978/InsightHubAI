@@ -1,0 +1,366 @@
+<<<<<<< HEAD
+{% extends 'header.html' %}
+
+{% block title %}Document Chat{% endblock %}
+
+{% block content %}
+
+<section class="page-heading">
+    <div class="eyebrow">DOCUMENT ASSISTANT</div>
+
+    <h1>
+        Chat with your
+        <span class="gradient-text">document.</span>
+    </h1>
+
+    <p>
+        Load a PDF or text once, then ask multiple questions
+        about the same source.
+    </p>
+</section>
+
+{% if error %}
+<div class="inline-error" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+<section class="chat-layout">
+
+    <!-- SOURCE PANEL -->
+    <aside class="panel source-panel">
+
+        <div class="section-title">
+            <span class="section-number">01</span>
+
+            <div>
+                <h2>Your Source</h2>
+                <p>Upload a PDF or paste text.</p>
+            </div>
+        </div>
+
+        {% if active_document_name %}
+
+        <div class="active-source">
+            <span class="active-source-icon">✓</span>
+
+            <div>
+                <strong>Active source</strong>
+                <span>{{ active_document_name }}</span>
+
+                <small>
+                    Follow-up questions reuse this source.
+                </small>
+            </div>
+        </div>
+
+        {% else %}
+
+        <div class="empty-source">
+            <span class="empty-source-icon">↑</span>
+
+            <div>
+                <strong>No source selected</strong>
+                <span>Start by adding a PDF or text.</span>
+            </div>
+        </div>
+
+        {% endif %}
+
+        <!-- FORM 1: LOAD OR SWITCH SOURCE -->
+        <form
+            action="{{ url_for('chatbot.chat') }}"
+            method="post"
+            enctype="multipart/form-data"
+            id="chat-form"
+            class="form-stack"
+        >
+
+            <input
+                type="hidden"
+                name="action"
+                value="set_source"
+            >
+
+            <label for="context_type">Source type</label>
+
+            <select
+                class="light-control"
+                name="context_type"
+                id="context_type"
+            >
+                <option
+                    value="file"
+                    {% if active_document_type == 'pdf' %}selected{% endif %}
+                >
+                    PDF document
+                </option>
+
+                <option
+                    value="text"
+                    {% if active_document_type != 'pdf' %}selected{% endif %}
+                >
+                    Pasted text
+                </option>
+            </select>
+
+            <!-- PDF INPUT -->
+            <div
+                id="context-file-input"
+                class="source-input-group"
+                {% if active_document_type != 'pdf' %}hidden{% endif %}
+            >
+
+                <label for="pdf_file">Choose PDF</label>
+
+                <input
+                    class="light-control file-control"
+                    type="file"
+                    name="pdf_file"
+                    id="pdf_file"
+                    accept=".pdf,application/pdf"
+                >
+
+                <small class="field-help">
+                    Select a PDF to load or switch sources.
+                </small>
+            </div>
+
+            <!-- TEXT INPUT -->
+            <div
+                id="context-text-input"
+                class="source-input-group"
+                {% if active_document_type == 'pdf' %}hidden{% endif %}
+            >
+
+                <label for="context_text">Text context</label>
+
+                <textarea
+                    class="light-control"
+                    name="context_text"
+                    id="context_text"
+                    rows="7"
+                    placeholder="Paste the text you want to discuss..."
+                ></textarea>
+
+            </div>
+
+            <div class="source-note">
+                Your source is indexed once and saved locally for reuse.
+                Loading a large source may take some time.
+            </div>
+
+            <button
+                class="btn btn-secondary btn-full"
+                type="submit"
+                id="load-source-button"
+            >
+                Load / Switch Source
+            </button>
+
+        </form>
+
+    </aside>
+
+    <!-- CONVERSATION PANEL -->
+    <section class="panel conversation-panel">
+
+        <div class="conversation-topline">
+
+            <div class="section-title">
+                <span class="section-number">02</span>
+
+                <div>
+                    <h2>Conversation</h2>
+                    <p>Ask a question, then continue naturally.</p>
+                </div>
+            </div>
+
+            <!-- Clear conversation, but keep the source -->
+            <form
+                action="{{ url_for('chatbot.clear_chat') }}"
+                method="post"
+                class="clear-form"
+            >
+                <button
+                    type="submit"
+                    class="text-button"
+                    {% if not chat_history %}disabled{% endif %}
+                >
+                    Clear Chat
+                </button>
+            </form>
+
+        </div>
+
+        <!-- EXISTING MESSAGES -->
+        <div
+            class="conversation"
+            id="conversation"
+            aria-live="polite"
+        >
+
+            {% if chat_history %}
+
+                {% for turn in chat_history %}
+
+                <article class="message message-user">
+                    <div class="message-label">YOU</div>
+
+                    <div class="message-body">{{ turn.question }}</div>
+                </article>
+
+                <article class="message message-assistant">
+                    <div class="message-label">INSIGHTHUB AI</div>
+
+                    <div class="message-body">{{ turn.answer }}</div>
+
+                    {% if turn.sources %}
+
+                    <details class="source-details">
+                        <summary>
+                            Retrieved passages
+                            ({{ turn.sources|length }})
+                        </summary>
+
+                        {% for source in turn.sources %}
+
+                        <blockquote>{{ source }}</blockquote>
+
+                        {% endfor %}
+                    </details>
+
+                    {% endif %}
+                </article>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="welcome-state">
+                    <div class="welcome-orbit">✦</div>
+
+                    <h3>What would you like to know?</h3>
+
+                    <p>
+                        Load a source, then ask about its key ideas,
+                        definitions, examples, or details.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <!-- FORM 2: ASK A QUESTION -->
+        <form
+            action="{{ url_for('chatbot.chat') }}"
+            method="post"
+            id="question-form"
+            class="question-composer"
+        >
+
+            <input
+                type="hidden"
+                name="action"
+                value="ask"
+            >
+
+            <label for="question">Your question</label>
+
+            <textarea
+                class="light-control question-input"
+                name="question"
+                id="question"
+                rows="2"
+                placeholder="Ask a question about your active PDF or text..."
+                required
+            ></textarea>
+
+            <div class="composer-bottom">
+
+                <span class="field-help">
+                    Enter to ask · Shift + Enter for a new line
+                </span>
+
+                <button
+                    class="btn btn-blue"
+                    id="ask-button"
+                    type="submit"
+                >
+                    Ask ↗
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script
+    src="{{ url_for('static', filename='chat.js') }}?v=4"
+    defer
+></script>
+
+{% endblock %}
+=======
+{% extends 'header.html' %} {% block title %}Chatbot{% endblock %} {% block
+content %}
+<h1 class="text-center mb-4">Chatbot</h1>
+<div class="card mb-4">
+  <div class="card-header bg-info text-white">
+    <h2 class="h5 mb-0">Chatbot</h2>
+  </div>
+  <div class="card-body">
+    <form action="/chat" method="POST" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label for="context_type" class="form-label">Context Type</label>
+        <select class="form-select" name="context_type" id="context_type">
+          <option value="text" selected>Text Context</option>
+          <option value="file">File Context</option>
+        </select>
+      </div>
+      <div class="mb-3" id="context-text-input">
+        <label for="context_text" class="form-label">Context Text</label>
+        <textarea
+          class="form-control"
+          name="context_text"
+          id="context_text"
+          rows="5"
+          placeholder="Enter context text"
+        ></textarea>
+      </div>
+      <div class="mb-3" id="context-file-input" style="display: none">
+        <label for="pdf_file" class="form-label">PDF File</label>
+        <input
+          type="file"
+          class="form-control"
+          name="pdf_file"
+          id="pdf_file"
+          accept=".pdf"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="question" class="form-label">Question</label>
+        <input
+          type="text"
+          class="form-control"
+          name="question"
+          id="question"
+          placeholder="Enter your question"
+        />
+      </div>
+      <button type="submit" class="btn btn-info">Ask</button>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="/static/chat.js"></script>
+{% endblock %}
+>>>>>>> origin/main
