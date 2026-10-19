@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("#generate-form");
@@ -54,8 +53,4 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-=======
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("Generate page loaded");
->>>>>>> origin/main
 });

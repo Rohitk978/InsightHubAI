@@ -1,9 +1,6 @@
 import logging
 
-<<<<<<< HEAD
 # Here we are setting up a logging configuration which stores logs information in app.log file we created and it stores current date and time, level name, messsage.
-=======
->>>>>>> origin/main
 def setup_logger():
     logging.basicConfig(
         filename="app.log",

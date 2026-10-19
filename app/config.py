@@ -2,10 +2,7 @@ import os
 from dotenv import load_dotenv
 import torch
 
-<<<<<<< HEAD
 # It loads the enviroment variables value from .env file.
-=======
->>>>>>> origin/main
 load_dotenv()
 
 class Config:
@@ -14,19 +11,9 @@ class Config:
     # UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "Uploads")
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
     MODEL_PATH = os.getenv("MODEL_PATH", "./models")
-<<<<<<< HEAD
     # 16MB max file size
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  
-=======
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
->>>>>>> origin/main
     HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
     REPO_ID = os.getenv("REPO_ID", "meta-llama/Llama-3.1-8B-Instruct")
     USER_AGENT = os.getenv("USER_AGENT", "ai-qa-project/1.0")
     CUDA_AVAILABLE = torch.cuda.is_available()
-<<<<<<< HEAD
-    # 16MB in bytes
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  
-=======
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB in bytes
->>>>>>> origin/main

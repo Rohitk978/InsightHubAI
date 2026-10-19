@@ -14,11 +14,7 @@ logger = logging.getLogger(__name__)
 if not os.getenv("HF_HOME"):
     os.environ["HF_HOME"] = "D:\\HuggingFaceCache"
 
-<<<<<<< HEAD
 # Download NLTK data once.
-=======
-# Download NLTK data
->>>>>>> origin/main
 nltk_data_dir = os.path.join(os.path.expanduser("~"), "nltk_data")
 punkt_path = os.path.join(nltk_data_dir, "tokenizers/punkt")
 punkt_tab_path = os.path.join(nltk_data_dir, "tokenizers/punkt/PY3/english.pickle")
@@ -38,9 +34,8 @@ def load_model(task, model_name, max_retries=2):
         for attempt in range(max_retries):
             try:
                 # Check available VRAM
-<<<<<<< HEAD
                 # Default to CPU
-                device = -1  
+                device = -1
                 if torch.cuda.is_available():
                     try:
                         # Here clearing the cache of gpu.
@@ -48,16 +43,7 @@ def load_model(task, model_name, max_retries=2):
                         vram = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)  # GB
                         used_vram = torch.cuda.memory_allocated(0) / (1024 ** 3)
                         # Require 1GB free for distilgpt2
-                        if vram - used_vram > 1.0:  
-=======
-                device = -1  # Default to CPU
-                if torch.cuda.is_available():
-                    try:
-                        torch.cuda.empty_cache()
-                        vram = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)  # GB
-                        used_vram = torch.cuda.memory_allocated(0) / (1024 ** 3)
-                        if vram - used_vram > 1.0:  # Require ~1GB free for distilgpt2
->>>>>>> origin/main
+                        if vram - used_vram > 1.0:
                             device = 0
                     except Exception as e:
                         logger.warning(f"VRAM check failed: {str(e)}. Falling back to CPU.")
@@ -75,22 +61,14 @@ def load_model(task, model_name, max_retries=2):
                 if task == "gpt2":
                     model = GPT2LMHeadModel.from_pretrained(model_name, token=token)
                     tokenizer = GPT2Tokenizer.from_pretrained(model_name, token=token)
-<<<<<<< HEAD
                     # Set pad token because tensors of sentences should be equal in length.
-=======
-                    # Set pad token
->>>>>>> origin/main
                     if tokenizer.pad_token_id is None:
                         tokenizer.pad_token = tokenizer.eos_token
                         model.config.pad_token_id = tokenizer.eos_token_id
                     # Move model to device
                     model = model.to(torch.device("cuda:0" if device == 0 else "cpu"))
                     _models[model_name] = model
-<<<<<<< HEAD
-                    _tokenizers[model_name] = tokenizer 
-=======
                     _tokenizers[model_name] = tokenizer
->>>>>>> origin/main
                     _pipelines[model_name] = model
                 else:
                     model = AutoModelForSeq2SeqLM.from_pretrained(model_name, token=token, from_flax=False)
@@ -105,12 +83,8 @@ def load_model(task, model_name, max_retries=2):
                         device=device,
                         framework="pt",
                         truncation=True,
-<<<<<<< HEAD
                         max_length=1024,
                         torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
-=======
-                        max_length=1024
->>>>>>> origin/main
                     )
                 logger.info(f"Successfully loaded model {model_name}")
                 break
@@ -131,11 +105,7 @@ def load_tokenizer(model_name):
             logger.info(f"Loading tokenizer for {model_name}")
             if "gpt2" in model_name:
                 tokenizer = GPT2Tokenizer.from_pretrained(model_name, token=token)
-<<<<<<< HEAD
                 # Set pad token to make the sentence lenght equal so tensors should have equal length of dimension.
-=======
-                # Set pad token
->>>>>>> origin/main
                 if tokenizer.pad_token_id is None:
                     tokenizer.pad_token = tokenizer.eos_token
                 _tokenizers[model_name] = tokenizer
@@ -148,20 +118,14 @@ def load_tokenizer(model_name):
     return _tokenizers[model_name]
 
 def chunk_text(text, max_tokens=512, tokenizer=None):
-<<<<<<< HEAD
     # Here it is splitting the document into complete sentences so it won't lost any meaning.
-=======
->>>>>>> origin/main
     sentences = sent_tokenize(text)
     chunks = []
     current_chunk = []
     current_length = 0
 
     for sentence in sentences:
-<<<<<<< HEAD
         # Here it is counting tokens so only maximum tokens fit at one time.
-=======
->>>>>>> origin/main
         token_count = len(tokenizer.encode(sentence, max_length=512, truncation=True) if tokenizer else sentence.split())
         if current_length + token_count > max_tokens:
             chunks.append(' '.join(current_chunk))
