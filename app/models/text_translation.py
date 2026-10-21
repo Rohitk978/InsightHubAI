@@ -71,9 +71,6 @@ class TextTranslator:
         self.max_input_chars = MAX_INPUT_CHARS
         self.chunk_tokens = 200
 
-    # ------------------------------------------------------------------
-    # Language detection
-    # ------------------------------------------------------------------
     @staticmethod
     def _english_word_ratio(text):
         words = re.findall(r"[a-zA-Z']+", text.lower())
@@ -124,16 +121,12 @@ class TextTranslator:
             return True
 
         # 3. langdetect is unreliable on short text, so trust the
-        #    common-word check there.
         if word_count < 8:
             return ratio >= 0.2
 
         # 4. Longer text: require a strong English word signal
         return ratio >= 0.3
 
-    # ------------------------------------------------------------------
-    # Model loading
-    # ------------------------------------------------------------------
     def _load_model(self):
         if self.model is not None:
             return
@@ -151,9 +144,6 @@ class TextTranslator:
 
         logger.info("NLLB model loaded on %s", self.device)
 
-    # ------------------------------------------------------------------
-    # Chunking (sentence-aware so translations stay coherent)
-    # ------------------------------------------------------------------
     def _token_count(self, text):
         return len(self.tokenizer.encode(text, add_special_tokens=False))
 
@@ -204,9 +194,6 @@ class TextTranslator:
 
         return chunks
 
-    # ------------------------------------------------------------------
-    # Translation
-    # ------------------------------------------------------------------
     def translate(self, text, target_language):
         if not isinstance(text, str) or not text.strip():
             raise ValueError("Please enter English text.")
